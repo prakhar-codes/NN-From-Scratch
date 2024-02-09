@@ -15,17 +15,15 @@ public class ANN {
 
     public void setInput(double input[][]) {
         System.out.println("Adding Input...");
-        int num_of_rows = input.length;
         int input_size = input[0].length;
-        trainInput = new double[num_of_rows][input_size];
+        trainInput = input;
         addInputLayer(input_size); 
     }
 
     public void setOutput(double output[][]) {
         System.out.println("Adding Output...");
-        int num_of_rows = output.length;
         int output_size = output[0].length;
-        trainOutput = new double[num_of_rows][output_size];
+        trainOutput = output;
         addOutputLayer(output_size); 
     }
 
@@ -72,19 +70,32 @@ public class ANN {
         }
     }
 
-    public void print(Layer layer, int j) {
-        if (layer!=null) {
-            System.out.print("Layer "+j+" : ");
-            Node nodes[] = layer.nodes;
-            System.out.print(nodes.length+" nodes : ");
-            for(int i=0; i<nodes.length; i++) {
-                System.out.print(" Node "+(i+1)+" : ");
-                if(nodes[i].weights != null) {
-                    for(int k=0; k<nodes[i].weights.length; k++) System.out.print(" "+nodes[i].weights[k]+ " ");
+    public void train(int epochs) {
+        for(int k=0; k<epochs; k++)
+            for(int i=0; i<trainInput.length; i++) {
+                // Forward Propagation
+                System.out.println("\n\nInput #"+(i+1));
+                inputLayer.fill(trainInput[i]);
+                System.out.println("Input Layer : ");
+                print(inputLayer);
+                for(int j=0; j<hiddenLayers.length; j++) {
+                    System.out.println("\nHidden layer"+(j+1)+" : ");
+                    hiddenLayers[j].fill();
+                    print(hiddenLayers[j]);
                 }
+                outputLayer.fill();
+                System.out.println("\nOutput Layer : ");
+                print(outputLayer);
             }
-            System.out.println();
-            print(layer.nextLayer, j+1);
+    }
+
+    public void print(Layer layer) {
+        for(int i=0; i<layer.nodes.length; i++) {
+            System.out.print("Node "+(i+1)+", Value : "+layer.nodes[i].value+", Activated Value : "+layer.nodes[i].activatedValue+", Weights : ");
+            if(layer == inputLayer) continue;
+            for(int j=0; j<layer.nodes[i].weights.length; j++) {
+                System.out.print(layer.nodes[i].weights[j]+" ");
+            }
         }
     }
 }

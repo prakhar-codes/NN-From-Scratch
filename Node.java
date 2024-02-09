@@ -22,4 +22,13 @@ public class Node {
         }
     }
 
+    public void calculate(Layer prevLayer) {
+        double sum = 0.0;
+        for(int i=0; i<weights.length; i++) {
+            sum+=prevLayer.nodes[i].value*weights[i];
+        }
+        this.value = sum;
+        this.activatedValue = activationFunction(this.value);
+    }
+
 }

@@ -7,6 +7,6 @@ public class Model {
         ann.setInput(x_train);
         ann.setOutput(y_train);
         ann.addDenseLayer(1, 2);
-        ann.print(ann.inputLayer, 1);
+        ann.train(10);
     }
 }

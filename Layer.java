@@ -13,4 +13,16 @@ public class Layer {
             nodes[i] = new Node();
         }
     }
+
+    public void fill(double data[]) {
+        for(int i=0; i<this.nodes.length; i++) {
+            this.nodes[i].value = data[i];
+        }
+    }
+
+    public void fill() {
+        for(int i=0; i<nodes.length; i++) {
+            nodes[i].calculate(this.prevLayer);
+        }
+    }
 }
