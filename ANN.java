@@ -70,9 +70,18 @@ public class ANN {
         }
     }
 
+    public double calculateLoss(int labelNumber) {
+        double loss = 0.0;
+        for(int i=0; i<trainOutput[labelNumber].length; i++) {
+            loss += Math.pow(trainOutput[labelNumber][i] - outputLayer.nodes[i].activatedValue, 2);
+        }
+        return loss/trainOutput[labelNumber].length;
+    }
+
     public void train(int epochs) {
-        for(int k=0; k<epochs; k++)
+        // for(int k=0; k<epochs; k++)
             for(int i=0; i<trainInput.length; i++) {
+                
                 // Forward Propagation
                 System.out.println("\n\nInput #"+(i+1));
                 inputLayer.fill(trainInput[i]);
@@ -86,7 +95,12 @@ public class ANN {
                 outputLayer.fill();
                 System.out.println("\nOutput Layer : ");
                 print(outputLayer);
+
+                // Loss calculation
+                double loss = calculateLoss(i);
+                System.out.println("\nLoss : "+loss);
             }
+        // }
     }
 
     public void print(Layer layer) {
