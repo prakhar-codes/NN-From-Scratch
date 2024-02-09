@@ -15,4 +15,11 @@ public class Node {
         return activatedVal; 
     }
 
+    public void initializeWeights() {
+        // Random initialization from (0,1)
+        for(int i=0; i<weights.length; i++) {
+            weights[i] = Math.random();
+        }
+    }
+
 }

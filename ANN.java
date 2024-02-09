@@ -66,6 +66,7 @@ public class ANN {
             Node nodes[] = layer.nodes;
             for(int i=0; i<nodes.length; i++) {
                 nodes[i].weights = new double[layer.prevLayer.nodes.length];
+                nodes[i].initializeWeights();
             }
             setWeights(layer.nextLayer);
         }
@@ -75,9 +76,12 @@ public class ANN {
         if (layer!=null) {
             System.out.print("Layer "+j+" : ");
             Node nodes[] = layer.nodes;
-            System.out.print(nodes.length+" nodes ");
+            System.out.print(nodes.length+" nodes : ");
             for(int i=0; i<nodes.length; i++) {
-                if(nodes[i].weights != null) System.out.print(" "+nodes[i].weights.length+ " weights ");
+                System.out.print(" Node "+(i+1)+" : ");
+                if(nodes[i].weights != null) {
+                    for(int k=0; k<nodes[i].weights.length; k++) System.out.print(" "+nodes[i].weights[k]+ " ");
+                }
             }
             System.out.println();
             print(layer.nextLayer, j+1);
