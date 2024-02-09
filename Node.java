@@ -2,7 +2,7 @@ public class Node {
 
     double value;
     double activatedValue;
-    int weights[];
+    double weights[];
 
     public Node() {
         value = 0.0d;

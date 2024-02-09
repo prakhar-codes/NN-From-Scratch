@@ -65,7 +65,7 @@ public class ANN {
         if (layer!=null) {
             Node nodes[] = layer.nodes;
             for(int i=0; i<nodes.length; i++) {
-                nodes[i].weights = new int[layer.prevLayer.nodes.length];
+                nodes[i].weights = new double[layer.prevLayer.nodes.length];
             }
             setWeights(layer.nextLayer);
         }
