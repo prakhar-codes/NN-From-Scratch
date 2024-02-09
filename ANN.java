@@ -5,12 +5,14 @@ public class ANN {
     double trainOutput[][];
     Layer inputLayer, outputLayer;
     Layer hiddenLayers[];
+    double learningRate;
     
     public ANN() {
         inputLayer = new Layer();
         outputLayer = new Layer();
         inputLayer.nextLayer = outputLayer;
         outputLayer.prevLayer = inputLayer;
+        learningRate = 0.1;
     }
 
     public void setInput(double input[][]) {
@@ -70,7 +72,7 @@ public class ANN {
         }
     }
 
-    public double calculateLoss(int labelNumber) {
+    private double calculateLoss(int labelNumber) {
         double loss = 0.0;
         for(int i=0; i<trainOutput[labelNumber].length; i++) {
             loss += Math.pow(trainOutput[labelNumber][i] - outputLayer.nodes[i].activatedValue, 2);
@@ -78,29 +80,89 @@ public class ANN {
         return loss/trainOutput[labelNumber].length;
     }
 
+    private void setGradients(Layer layer, int labelNumber) {
+        if (layer!=inputLayer) {
+            for(int i=0; i<layer.nodes.length; i++) {
+                Node node = layer.nodes[i];
+                if(layer!=outputLayer) {
+                    int numOfGradients = layer.nextLayer.nodes.length;
+                    node.gradients = new double[numOfGradients];
+                    for(int j=0; j<numOfGradients; j++) {
+                        node.gradients[j] = node.getActivationDerivative() * layer.nextLayer.nodes[j].weights[i] * layer.nextLayer.nodes[j].getSumOfGradients();
+                    }
+                    
+                } else {
+                    double gradient = 2.0*(node.activatedValue - trainOutput[labelNumber][i]) * node.getActivationDerivative() / layer.nodes.length;
+                    node.gradients = new double[1];
+                    node.gradients[0] = gradient;
+
+                }
+            }
+            setGradients(layer.prevLayer, labelNumber);
+        } 
+    }
+
+    private void setNewWeights(Layer layer, int labelNumber) {
+        if(layer!=inputLayer) {
+            Node nodes[] = layer.nodes;
+            for(int i=0; i<nodes.length; i++) {
+                for(int j=0; j<nodes[i].weights.length; j++) {
+                    double oldWeight = nodes[i].weights[j];
+                    double dy_dw = layer.prevLayer.nodes[j].activatedValue;
+                    double newWeight = oldWeight - learningRate*dy_dw*nodes[i].getSumOfGradients();
+                    nodes[i].weights[j] = newWeight;
+                }
+            }
+            setNewWeights(layer.prevLayer, labelNumber);
+        }
+    }
+
     public void train(int epochs) {
-        // for(int k=0; k<epochs; k++)
+        for(int k=0; k<epochs; k++) {
+            double epochloss = 0.0;
+            System.out.println("Epoch #"+(k+1));
+            double correctPred = 0.0;
             for(int i=0; i<trainInput.length; i++) {
                 
                 // Forward Propagation
-                System.out.println("\n\nInput #"+(i+1));
+                // System.out.println("\n\nInput #"+(i+1));
                 inputLayer.fill(trainInput[i]);
-                System.out.println("Input Layer : ");
-                print(inputLayer);
+                // System.out.println("Input Layer : ");
+                // print(inputLayer);
                 for(int j=0; j<hiddenLayers.length; j++) {
-                    System.out.println("\nHidden layer"+(j+1)+" : ");
+                    // System.out.println("\nHidden layer"+(j+1)+" : ");
                     hiddenLayers[j].fill();
-                    print(hiddenLayers[j]);
+                    // print(hiddenLayers[j]);
                 }
                 outputLayer.fill();
-                System.out.println("\nOutput Layer : ");
-                print(outputLayer);
+                // System.out.println("\nOutput Layer : ");
+                // print(outputLayer);
 
                 // Loss calculation
                 double loss = calculateLoss(i);
-                System.out.println("\nLoss : "+loss);
+                epochloss+=loss;
+                // System.out.println("\nLoss : "+loss);
+
+                if((outputLayer.nodes[0].activatedValue > 0.5 && trainOutput[i][0]==1)||(outputLayer.nodes[0].activatedValue < 0.5 && trainOutput[i][0]==0)) correctPred++;
+
+                // Backward Propagation
+                setGradients(outputLayer, i);
+                setNewWeights(outputLayer, i);
             }
-        // }
+            epochloss = epochloss/trainInput.length;
+            double accuracy = correctPred/trainOutput.length;
+            System.out.println("Loss : "+epochloss+" Accuracy : "+accuracy);
+        }
+    }
+
+    public void predict(double input[]) {
+        inputLayer.fill(input);
+        for(int j=0; j<hiddenLayers.length; j++) {
+            hiddenLayers[j].fill();
+        }
+        outputLayer.fill();
+        if(outputLayer.nodes[0].activatedValue>0.5) System.out.println("Predicted value : 1");
+        else System.out.println("Predicted value : 0");
     }
 
     public void print(Layer layer) {

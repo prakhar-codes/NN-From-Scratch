@@ -17,6 +17,7 @@ public class Layer {
     public void fill(double data[]) {
         for(int i=0; i<this.nodes.length; i++) {
             this.nodes[i].value = data[i];
+            this.nodes[i].activatedValue = data[i];
         }
     }
 
