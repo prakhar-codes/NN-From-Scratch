@@ -5,14 +5,12 @@ public class ANN {
     double trainOutput[][];
     Layer inputLayer, outputLayer;
     Layer hiddenLayers[];
-    double learningRate;
     
     public ANN() {
         inputLayer = new Layer();
         outputLayer = new Layer();
         inputLayer.nextLayer = outputLayer;
         outputLayer.prevLayer = inputLayer;
-        learningRate = 0.1;
     }
 
     public void setInput(double input[][]) {
@@ -102,7 +100,7 @@ public class ANN {
         } 
     }
 
-    private void setNewWeights(Layer layer, int labelNumber) {
+    private void setNewWeights(Layer layer, int labelNumber, double learningRate) {
         if(layer!=inputLayer) {
             Node nodes[] = layer.nodes;
             for(int i=0; i<nodes.length; i++) {
@@ -113,11 +111,11 @@ public class ANN {
                     nodes[i].weights[j] = newWeight;
                 }
             }
-            setNewWeights(layer.prevLayer, labelNumber);
+            setNewWeights(layer.prevLayer, labelNumber, learningRate);
         }
     }
 
-    public void train(int epochs) {
+    public void train(int epochs, double learningRate) {
         for(int k=0; k<epochs; k++) {
             double epochloss = 0.0;
             System.out.println("Epoch #"+(k+1));
@@ -147,7 +145,7 @@ public class ANN {
 
                 // Backward Propagation
                 setGradients(outputLayer, i);
-                setNewWeights(outputLayer, i);
+                setNewWeights(outputLayer, i, learningRate);
             }
             epochloss = epochloss/trainInput.length;
             double accuracy = correctPred/trainOutput.length;
