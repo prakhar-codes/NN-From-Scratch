@@ -121,7 +121,7 @@ public class ANN {
     public void train(int epochs, double learningRate) {
         for(int k=0; k<epochs; k++) {
             double epochloss = 0.0;
-            // System.out.println("Epoch #"+(k+1));
+            System.out.println("Epoch #"+(k+1));
             double correctPred = 0.0;
             for(int i=0; i<trainInput.length; i++) {
                 

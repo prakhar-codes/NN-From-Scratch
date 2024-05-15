@@ -12,13 +12,16 @@ public class Node {
     }
 
     private double activationFunction(double valueToBeActivated) {
-        //sigmoid activation function
-        double activatedVal = 1.0/(1.0 + Math.exp(-valueToBeActivated));
+        double activatedVal = 1.0/(1.0 + Math.exp(-valueToBeActivated)); // sigmoid
+        //double activatedVal = Math.tanh(valueToBeActivated); // tanh
+        //double activatedVal = Math.max(0, valueToBeActivated); // ReLU 
         return activatedVal; 
     }
 
     private double activationDerivative(double value) {
-        return activationFunction(value)*(1-activationFunction(value));
+        return activationFunction(value)*(1-activationFunction(value)); // sigmoid
+        //return (1 - Math.pow(Math.tanh(value), 2)); // tanh
+        //return value>0?1:0; // ReLU
     }
 
     public double getActivationDerivative() {
