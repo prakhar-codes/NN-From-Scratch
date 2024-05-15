@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Regression",
+            "request": "launch",
+            "mainClass": "Regression",
+            "projectName": "NN From Scratch_fb0f6e36"
+        },
+        {
+            "type": "java",
+            "name": "Classification",
+            "request": "launch",
+            "mainClass": "Classification",
+            "projectName": "NN From Scratch_fb0f6e36"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"

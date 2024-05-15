@@ -163,7 +163,9 @@ public class ANN {
                     setNewWeights(outputLayer, i, learningRate);
                 }
                 epochloss = epochloss/trainInput.length;
+                System.out.println("Loss : "+epochloss);
             }
+    
         }
         if(lossFunction.equals("crossentropy")) {
             for(int k=0; k<epochs; k++) {
