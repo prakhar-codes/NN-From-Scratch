@@ -3,6 +3,7 @@ public class Node {
     double value;
     double activatedValue;
     double weights[];
+    double bias;
     double gradients[];
 
     public Node() {
@@ -21,7 +22,7 @@ public class Node {
     }
 
     public double getActivationDerivative() {
-        return activationDerivative(activatedValue);
+        return activationDerivative(this.value);
     } 
 
     public double getSumOfGradients() {
@@ -35,8 +36,10 @@ public class Node {
     public void initializeWeights() {
         // Random initialization from (0,1)
         for(int i=0; i<weights.length; i++) {
-            weights[i] = Math.random();
+            weights[i] = 2*Math.random()-1;
+            // System.out.println(weights[i]);
         }
+        bias = 2*Math.random()-1;
     }
 
     public void calculate(Layer prevLayer) {
@@ -44,7 +47,7 @@ public class Node {
         for(int i=0; i<weights.length; i++) {
             sum+=prevLayer.nodes[i].activatedValue*weights[i];
         }
-        this.value = sum;
+        this.value = sum + bias;
         this.activatedValue = activationFunction(this.value);
     }
 

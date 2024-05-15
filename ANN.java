@@ -110,6 +110,9 @@ public class ANN {
                     double newWeight = oldWeight - learningRate*dy_dw*nodes[i].getSumOfGradients();
                     nodes[i].weights[j] = newWeight;
                 }
+                double oldBias = nodes[i].bias;
+                double newBias = oldBias - learningRate*nodes[i].getSumOfGradients();
+                nodes[i].bias = newBias;
             }
             setNewWeights(layer.prevLayer, labelNumber, learningRate);
         }
@@ -118,7 +121,7 @@ public class ANN {
     public void train(int epochs, double learningRate) {
         for(int k=0; k<epochs; k++) {
             double epochloss = 0.0;
-            System.out.println("Epoch #"+(k+1));
+            // System.out.println("Epoch #"+(k+1));
             double correctPred = 0.0;
             for(int i=0; i<trainInput.length; i++) {
                 
@@ -126,15 +129,15 @@ public class ANN {
                 // System.out.println("\n\nInput #"+(i+1));
                 inputLayer.fill(trainInput[i]);
                 // System.out.println("Input Layer : ");
-                // print(inputLayer);
+                print(inputLayer);
                 for(int j=0; j<hiddenLayers.length; j++) {
                     // System.out.println("\nHidden layer"+(j+1)+" : ");
                     hiddenLayers[j].fill();
-                    // print(hiddenLayers[j]);
+                    print(hiddenLayers[j]);
                 }
                 outputLayer.fill();
                 // System.out.println("\nOutput Layer : ");
-                // print(outputLayer);
+                print(outputLayer);
 
                 // Loss calculation
                 double loss = calculateLoss(i);
@@ -165,10 +168,10 @@ public class ANN {
 
     public void print(Layer layer) {
         for(int i=0; i<layer.nodes.length; i++) {
-            System.out.print("Node "+(i+1)+", Value : "+layer.nodes[i].value+", Activated Value : "+layer.nodes[i].activatedValue+", Weights : ");
+            // System.out.print("\nNode "+(i+1)+", Value : "+layer.nodes[i].value+", Activated Value : "+layer.nodes[i].activatedValue+", Weights : ");
             if(layer == inputLayer) continue;
             for(int j=0; j<layer.nodes[i].weights.length; j++) {
-                System.out.print(layer.nodes[i].weights[j]+" ");
+                // System.out.print(layer.nodes[i].weights[j]+" ");
             }
         }
     }
